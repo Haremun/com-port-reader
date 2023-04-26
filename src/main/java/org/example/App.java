@@ -26,7 +26,7 @@ public class App {
                 port.addDataListener(new SerialPortDataListener() {
                     @Override
                     public int getListeningEvents() {
-                        return SerialPort.LISTENING_EVENT_DATA_RECEIVED;
+                        return SerialPort.LISTENING_EVENT_DATA_WRITTEN;
                     }
 
                     @Override
