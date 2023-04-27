@@ -1,8 +1,6 @@
 package org.example;
 
 import com.fazecast.jSerialComm.SerialPort;
-import com.fazecast.jSerialComm.SerialPortDataListener;
-import com.fazecast.jSerialComm.SerialPortEvent;
 
 import java.util.Arrays;
 
@@ -11,38 +9,26 @@ import java.util.Arrays;
  */
 public class App {
 
+    private static final String PORT_NAME = "COM7";
+
+
     public static void main(String[] args) {
         SerialPort[] ports = SerialPort.getCommPorts();
-        System.out.println(Arrays.toString(ports));
-
-        for (SerialPort port : ports) {
-            port.openPort();
-            port.addDataListener(new SerialPortDataListener() {
-                @Override
-                public int getListeningEvents() {
-                    return SerialPort.LISTENING_EVENT_DATA_RECEIVED;
-                }
-
-                @Override
-                public void serialEvent(SerialPortEvent serialPortEvent) {
-                    byte[] receivedData = serialPortEvent.getReceivedData();
-                    System.out.println(serialPortEvent.getSerialPort().getSystemPortName() + ": " + new String(receivedData));
-                }
-            });
-            port.addDataListener(new SerialPortDataListener() {
-                @Override
-                public int getListeningEvents() {
-                    return SerialPort.LISTENING_EVENT_DATA_WRITTEN;
-                }
-
-                @Override
-                public void serialEvent(SerialPortEvent serialPortEvent) {
-                    byte[] receivedData = serialPortEvent.getReceivedData();
-                    System.out.println(serialPortEvent.getSerialPort().getSystemPortName() + ": " + new String(receivedData));
-                }
-            });
-        }
+        SerialPort port = getPort(ports);
+        System.out.println("Connected to " + PORT_NAME);
+        port.openPort();
+        System.out.println("Opened port " + port.getDescriptivePortName());
+        AntenaCommunicator antenaCommunicator = new AntenaCommunicator(port);
+        port.addDataListener(new AmcPortListener(antenaCommunicator));
+        antenaCommunicator.requestData();
         while (true) {
         }
+    }
+
+    private static SerialPort getPort(SerialPort[] ports) {
+        return Arrays.stream(ports)
+                .filter(serialPort -> serialPort.getDescriptivePortName().contains(PORT_NAME))
+                .findFirst()
+                .orElseThrow();
     }
 }
