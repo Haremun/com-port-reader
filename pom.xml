@@ -7,7 +7,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>com-port-reader</name>
+    <name>pl.mwgrogowo</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -37,7 +37,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.example.App</mainClass>
+                            <mainClass>pl.mwgrogowo.App</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
